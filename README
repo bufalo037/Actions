@@ -1,139 +1,114 @@
 ===============================================================================
 									Costea Mihai 
-										322CB
-===============================================================================
-									  POO Tema2
+
 ===============================================================================
 ===============================================================================
 
 
-								    Strategie
+								    Strategy
 
-In main se face citirea inputului iar dupa urmeaza ca pe baza inputului citit 
-sa se apeleze functii care rezolve comanda solutionata. Inceperea interpretarii
-liniilor de input ca momenzi valide se face dupa ce a fost citita o linie cu 
-comanda begin si se termina cand este citita o linie cu comanda end. 
-Atentie!! dupa ce a fost citita comanda bein nu este permisa introducerea de
-input invalid sau comportamentul programului este nedefinit
-
+Input reading is done inside the main. Functions are chosen to resolve 
+the solutioned command based on the read input. The interpretation of input 
+lines as valid commands is made after a begin command was read and it ends once
+an end command is read. Caution!! After the begin command was read, the
+program is not allowed to take invalid input or the behaviour is undefined.
 
 ===============================================================================
 
 A brief introduction to classes:
 
 	Feed:
-Este o clasa are tine minte toate atributele necesare unui feed ca sa 
-existe, precum nume sau valoare si cateva variabile aditionale care il 
-vor ajuta in momentul in care un observator va dori sa viziteze feed-ul ca
-sa printeze informatiile, iar feedul va trebui sa il lase sau nu sa printeze
-in urma informatilor pe care le are el impreunate cu inforatile pe care le
-are visitatorul.
+It's a class that remembers all the attributes needed for a feed to exist, such 
+as name or value. Also, a couple of additional values will help it when an 
+observer will wish to visit the feed to print the information. The feed will
+have to let or not to let it print following the information it has joined with
+the information the visitor has. 
 
 ===============================================================================
 
 	Subject:
-Este subiectul din design pattern-ul observer, acesta l-am implementat impreuna
-cu singleton deoarece mi se parea ca mergeau mana in mana.
-Acesta are ca atribute un TreeMap de feeduri care sunt ordonate in ordine 
-lexicografica dupa numele lor (numele lor este cheia). Acest fapt se realizeaza
-prin intermediul clasei interne defnite de mine strcmp, pe care am realizat
-ulterior ca este redundanta deoarece TreeMap-ul le ordona in ordine lexicografica
-si fara sa ii dau un comparator explicit(ar fi fost bun un comparator in momentul
-in care mi-as fi dorit sa stabilesc o alta relatie de ordine decat cea 
-lexicografica). Acest obiect are rolul de a mentine feedurile sortate ca, cand
-apare un nou observer, ele sa fie copiate in ordine fara sa fie implementate 
-atunci operatii de sortare peste aceastea.
+It is the subject from the observer pattern design. I implemented it together 
+with a singleton because I thought they were going hand in hand. 
+This one has as attributes a feeds TreeMap sorted by a lexicographical order
+by their names (their names are the key). This is realized by an internal class
+defined by me, STRCMP. I subsequently realized that this is redundant because 
+the TreeMap was still sorting them in lexicographical order without giving it an
+explicit comparator (a comparator would've been good the moment I would have 
+liked to establish a relation other than the lexicographical order).
+This object has the role to maintain feeds sorted in such way that once a new
+observer appears, they are copied in order without the implementations of sorting
+operations for them.
 
-Observatori sunt tinuti intr-o instanta de tipul HashMap<Integer,Observer>,
-deoarece nu conteaza ordinea acestora in vr-un fel iar presupun ca costurile
-unui HashMap sunt ai mici decat ale unui TreeMap tocmai din cauza factorului de
-sortare.
+The observers are kept in a HashMap<Integer,Observer> type instance because their
+order doesn't matter in any way. I presume the costs of a HashMap are smaller than
+the costs of a TreeMap because of the sorting factor. 
 
-Operatiile de adaugare sau stergere de observatori sunt facute prin intermediul
-acestei clase, precum si operatiile de adaugare de feeduri.
+The adding or removing operations are made by using this class, as well as the 
+feed adding operations. 
 
-Adaugarea de observatori se realizeaza prin intermediul factory-ului de 
-observatori
+The adding of observers is realized by using the observer factory. 
 
 ===============================================================================
 
 	ObserversFactory:
-Este factory-ul de care am discutat in ultimul paragraf, tot ce face este sa
-creeze observatori, si deasemenea este si acesta singleton deoarece mai multe
-instante ale acestui obiect nu aveau sens.
+This is the factory I was talking about in the last paragraph. All it does is 
+create observers. Also, this is a singleton because multiple instances of this
+object wouldn't make any sense.
 
 ===============================================================================
 
 	Observer:
-Care este o clasa abstracta care are un singur copil FeedObserver (Doar ca sa
-mentin logica design pattern-ului in picioare), iar FeedObserver are 
-urmatoarele atribute:
-- feed care est un TreeMap care se inititializeaza in 
-momentul crearii unui observer cu valorile din Treemap-ul de feeduri pe care
-il avea subject-ul
--rpn care este tot un TreeMap din cauza proprietatii sale de a sorta ,adauga
-si sterge elemente in O(1). rnp va fi initializat cand se va apela metoda print
-Metodele lui FeedObserver:
--print care va crea Reversed Polish Notation-ul pentru filtrul observerului
--update care creste numarul modificari care au fost aplicate asupra unui 
-feed de la ultima afisare a acestuia sau adauga un nou feed in TreeMap daca
-este necesar (numarul de modificari de la ultima printare va fi 0)
--visit care va dori sa acceseze bazat pe ultima informatie avalable in 
-TreeMap-ul subiectului feedul dat ca parametru functiei pentru printare(avand
-chei comune pentru feduri (Exista o functie bijectiva care transpune fiecare
-feed al subiectului in alt feed al observatorului, iar transformarea lasa
-numele feedului neschibat)). Printarea se va face doar daca feedul a aceptat
-observatorul.
-
+This is an abstract class that has a single FeedObserver child (just to keep 
+the design pattern logic). A FeedObserver has the following attributes:
+- feed which still is a TreeMap because of its property of sorting, adding and
+removing elements in 0(1). Rpn will be initialized when the print method will 
+be called. 
+FeedObserver's methods:
+-print which will create the Reversed Polish Notation for the observer's filter
+-update which increases the number of modifications that were applied on a
+feed from its last display or adds a new feed in TreeMap if necessary (the
+number of modifications from the last print will be 0)
+-visit which will want to access, based on the last available information in the
+subject's Treemap, the feed given as a function's parameter for printing, 
+having common keys for feeds. There is an objective function that transposes 
+every subject's feed in another observer's feed and the transformation leaves 
+the feed's name unchanged. The printing will be made only if the feed is
+accepted by the observer.
 ===============================================================================
 
 	Rpn:
-O clasa care ar fi putut sa fie facuta cu singleton design pattern de altfel
-am ales sa ii fac toate metodele statice deoarece imi place mai mult aceasta 
-abordare cand vine vorba de entitati care au un singur scop. Scopul 
-singleton-ului mi se pare doar cand ai avea o clasa cu metode statice si pe 
-deasupra are sens si o instantiere unica a acesteia, caz care nu se intalneste 
-la rpn.
-Metode:
--parse parseaza filtrul si returneaza un ArrayList de strings format din tokene
-Tokenele sunt stringurile atomice pe care le poate avea o structura matematica.
--priority e pur si simplu o metoda care asigneaza niste prioritati operanzilor
-parsati mai sus, pentru implementarea Shunting-yard algorithm-ului.
--make_rpn este o metoda care implementeaza Shunting-yard algorithm, nu e nimic
-mai mult decat ce scrie pe wikipedia despre acesta(link-ul din eneunt).
-Metoda intoarce un TreeMap<Integer,String> care reprezinta rpn-ul.
+A class that could have been made with a singleton design pattern. I chose to 
+do all the statistical methods because I like this approach more when it comes 
+to entities with a single goal. I chose to do this because in my opinion, a 
+singleton should be used just for classes that make sense to be instanced just
+once. However, I don't need an object to implement this class.
+
+Methods:
+-parse parses the filter and returns a strings ArrayList consisting of tokens.
+Tokens are the atomic strings that a mathematical structure can have. 
+-priority it simply is a metheod that assigns some priorities to the operands
+parsed above for the the implementation of the algorithm's Shunting-Yard.
+-make_rpn is a method that implements Shunting-Yard algorithm, it is nothing 
+more than what is described as on its Wikipedia page.
+The method returns a TreeMap<Integer,String> that represents the rpn.
 
 ===============================================================================
 
 	Operations:
-O clasa similara cu cea prezentata anterio din punctul de veere al implementarii.
-Metode:
--call_operator care primeste 3 stringuri si interpreteaza primul string ca fiind
-un operator iar celelalte 2 stringuri le interpreteaza ca fiind operanzii 
-operatorului in ordine de la stanga la dreapta. Functiile apelate sunt prezentate
-in restul clasei si fac exact ceea ce scrie in enuntul temei ca fac.
+A class similar to the one presented previously from an implementation point of
+view. 
+Methods:
+-call_operator receives 3 strings and interprets the first string as being an 
+operator and interprets the other 2 strings as being the operator's operands 
+in a left to right order. The called functions are presented in the rest of the
+class.
 
 ===============================================================================
 
 	Node:
-Clasa abstracta care este extinsa de OperatorNode si Operand node.
-Singurele metode pe care le au aceste clase sunt metodele care au fost explicate
-de altfel in javadoc la interfetele corespunzatoare metodelor implementate.
+Abstract class that is extended by the OperatorNode and Operand node. The only
+methods that these classes have are the ones explained in the javadoc in the 
+interfaces corresponding to the implementation methods. 
 
 ===============================================================================
 ===============================================================================
-
-Interfetele au fost explicate in javadoc. 
-
-Deasemenea am o intrebare: era musai sa fac un arbore ? Deoarece se putea rezolva,
-chiar mai eficient fara un arbore, pur si simplu rezolvam rpn-ul, fara sa ma 
-chinui cu arbori. Asta a fost prima mea implementare, si o sa o atasez si pe 
-aceasta temei. Ea se gaseste in fisieul Feed.oldjava (care ar trebui sa 
-inlocuiasca fisierul existent Feed.java). Pun aceasta intrebare deoarece ati zis
-ca motivul pentru care facem un arbore este ca sa implementam visitor design 
-pattern dar eu l-am mai implementat odata in aceasta tema(cand verificam daca 
-se poate printa sau nu feed pentru un observer).
-
-===============================================================================
-===============================================================================
-
