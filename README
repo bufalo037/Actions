@@ -1,11 +1,10 @@
 ===============================================================================
-									Costea Mihai 
+Costea Mihai 
 
 ===============================================================================
 ===============================================================================
 
-
-								    Strategy
+	Strategy:
 
 Input reading is done inside the main. Functions are chosen to resolve 
 the solutioned command based on the read input. The interpretation of input 
